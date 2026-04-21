@@ -78,7 +78,9 @@ Once the exception port fires, we will get the victim’s task port and its thre
 I have made a [`ProcessContext`](https://github.com/khanhduytran0/TaskPortHaxxApp/blob/pacbypass/TaskPortHaxxApp/ProcessContext.m) class which is essentially a wrapper around a process's exception handler with convenient methods to read/write as well as calling arbitrary functions. Reading and writing memory call `__atomic_load_X` and `__atomic_store_X` instead of some random gadgets :D. Also, dyld shared cache ASLR slide is the same across all processes, so we can just take our process's pointer and perform arbitrary calls directly.
 
 > [!NOTE]
-> This technique was patched in iOS 18.0, so in the event of another CoreTrust bypass drops, a new technique is required. As noted by @alfiecg24, this is likely due to `thid_should_crash` mitigation, and palera1n had to set `thid_should_crash=0` boot arg to bypass this.
+> ~~This technique was patched in iOS 18.0, so in the event of another CoreTrust bypass drops, a new technique is required. As noted by @alfiecg24, this is likely due to `thid_should_crash` mitigation, and palera1n had to set `thid_should_crash=0` boot arg to bypass this.~~
+>
+> Update: DarkSword use the very same exception handler technique, and disproved this by using kernel r/w to [bypass fatal crash](https://github.com/wh1te4ever/darksword-kexploit-fun/blob/5add59d715c8ed0accf140e90212af48f6ef78de/darksword-kexploit-fun/kexploit/kutils.m#L143-L149). As a result, this technique is known to work up to iOS 26.0.1, and may be more as long as you have kernel r/w.
 
 ## Bypassing userspace PAC
 On arm64, everything above is enough to do anything with the victim process, including reading/writing memory and doing arbitrary function calls. However, for arm64e, we need a way to sign a `br` gadget that would allow us to completely bypass userspace PAC, since we can always set PC to reuse that signed `br` gadget.
