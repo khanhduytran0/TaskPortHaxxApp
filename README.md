@@ -84,7 +84,7 @@ I have made a [`ProcessContext`](https://github.com/khanhduytran0/TaskPortHaxxAp
 
 ## Bypassing userspace PAC
 On arm64, everything above is enough to do anything with the victim process, including reading/writing memory and doing arbitrary function calls. However, for arm64e, we need a way to sign a `br` gadget that would allow us to completely bypass userspace PAC, since we can always set PC to reuse that signed `br` gadget.
-Moreover, a userspace PAC bypass is required even if you have a kernel r/w exploit on iOS 17.0 to overwrite launchd executable path, since SPTM now manages userland PAC.
+~~Moreover, a userspace PAC bypass is required even if you have a kernel r/w exploit on iOS 17.0 to overwrite launchd executable path, since SPTM now manages userland PAC.~~ Turns out [DarkSword disproved this](https://github.com/wh1te4ever/darksword-kexploit-fun/blob/5add59d715c8ed0accf140e90212af48f6ef78de/darksword-kexploit-fun/TaskRop/Thread.m#L110-L114), as you could still overwrite `jop_pid` and `rop_pid` with kernel r/w alone.
 
 Here are some approaches:
 
